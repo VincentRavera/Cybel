@@ -1,0 +1,11 @@
+#+title: Cyb.el
+
+WIP: Provide tools for pentesting or CTF challenges.
+
+* Features
+** Reverse shell
+#+BEGIN_SRC emacs-lisp
+(cybel-revshell)
+#+END_SRC
+* Todo
+** Reverse tramp
