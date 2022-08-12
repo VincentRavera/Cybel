@@ -18,33 +18,40 @@
 ;; Provide a reverse tramp method
 ;;
 ;; inspired from https://www.emacswiki.org/emacs/TrampMode
+;; also inspired from https://github.com/dougm/vagrant-tramp
 ;;
-;; TODO: Tramp starts the process and run one command
-;; however it hangs
-;; TODO: change histfile
+;; DONE: Tramp starts the process and run one command
+;; DONE: Dired and find-file opens on connections
+;; TODO: change histfile for /dev/null
+;; TODO: Connection is unstable, async shell command and vterms kills the connections
 ;;
 ;;; Code:
 (require 'tramp)
-(setq tramp-debug-buffer t)
-(setq tramp-verbose 10)
-(add-to-list 'tramp-methods
-             (list "rev"
-                   '(tramp-login-program "nc")
-                   '(tramp-default-port 2222)
-                   (cons 'tramp-login-args
-                         (list (list
-                                '("-l")
-                                '("-v")
-                                '("-p" "1234"))))
-                   '(tramp-remote-shell "sh")
-                   '(tramp-remote-shell-args ("-c" "'i"))
-                   )
-             t)
 
-;; tramp backup path (if not set, save in local backup directory)
-(setq tramp-backup-directory-alist nil)
-(setq tramp-auto-save-directory nil)
+(defgroup cybel-revtramp nil
+  "Cybel Reverse tramp subgroup."
+  :group 'cybel
+  :prefix "cybel-revtramp*"
+  :link '(url-link :tag "Github" "https://github.com/VincentRavera/Cybel"))
 
-;; /rev:x@x22:
+(defconst cybel-revtramp-tramp-method "rev"
+  "Method to connect tramp to a reverse shell.")
+
+;; The tramp method
+;;;###autoload
+(defun cybel-revtramp-tramp-add-method ()
+  "Add `cybel-revtramp-tramp-method' to `tramp-methods'."
+  (add-to-list 'tramp-methods
+               `(,cybel-revtramp-tramp-method
+                 (tramp-login-program     "nc")
+                 (tramp-login-args        (("-l") ("-p" "%p")))
+                 (tramp-remote-shell      "/bin/sh")
+                 (tramp-remote-shell-args ("-i" "-c"))
+                 (tramp-connection-timeout 5))))
+
+;; Debug commands
+;; (setq tramp-debug-buffer t)
+;; (setq tramp-verbose 10)
+
 (provide 'cybel-revtramp)
 ;;; cybel-revtramp.el ends here

